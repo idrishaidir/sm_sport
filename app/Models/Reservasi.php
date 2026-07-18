@@ -13,7 +13,9 @@ class Reservasi extends Model
         'jam_mulai',
         'durasi_jam',
         'total_bayar',
-        'status'
+        'status',
+        'bukti_bayar',
+        'batas_waktu_bayar'
     ];
 
     public function user()

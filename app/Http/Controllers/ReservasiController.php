@@ -57,10 +57,40 @@ class ReservasiController extends Controller
             'jam_mulai'=> $request->jam_mulai,
             'durasi_jam'=> $request->durasi_jam,
             'total_bayar'=>$lapangan->harga_per_jam * $request->durasi_jam,
-            'status'=>'Pending'
+            'status'=>'Pending',
+            'batas_waktu_bayar' => now()->addMinutes(15)
         ]);
 
-        return back()->with("Succes", "Reservasi Berhasil Dibuat! Silahkan Lakukan Pembayaran");
+        return redirect()->route('dashboard')->with("Succes", "Reservasi Berhasil Dibuat! Silahkan upload bukti pembayaran dalam 15 menit.");
+    }
 
+    public function uploadBukti(Request $request, $id)
+    {
+        $request->validate([
+            'bukti_bayar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $reservasi = Reservasi::findOrFail($id);
+
+        if (now()->greaterThan($reservasi->batas_waktu_bayar)){
+            $reservasi->update(['status' => 'Batal']);
+            return back()->with('error', 'Waktu Pembayaran telah Habis. Pesanan dibatalkan otomatis.');
+        }
+
+        if ($request->hasFile('bukti_bayar')){
+            $file = $request->file('bukti_bayar');
+
+            $nama_file = time() . "_" . $file->getClientOriginalName();
+            
+            $file->storeAs('public/bukti_bayar', $nama_file);
+
+            $reservasi->update([
+                'bukti_bayar' => $nama_file,
+            ]);
+
+            return back()->with("Succes", "Bukti pembayaran berhasil diunggah! Menunggu Konfirmasi Admin.");
+        }
+
+        return back()->with('error', 'Gagal mengunggah file.');
     }
 }
