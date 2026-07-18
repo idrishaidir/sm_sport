@@ -123,8 +123,8 @@
                         We provide premium futsal and badminton facilities for everyone. Experience a healthy lifestyle in a professional, clean, and inspiring environment tailored for your comfort.
                     </p>
                     <div class="flex flex-wrap gap-4">
-                        <a href="#facilities" class="bg-white text-primary hover:bg-background px-6 py-3 rounded-xl font-semibold transition-colors">
-                            Explore Facilities
+                        <a href="{{ route('ketersediaan') }}" class="bg-white text-primary hover:bg-background px-6 py-3 rounded-xl font-semibold transition-colors">
+                            Cek Ketersediaan
                         </a>
                         <a href="{{ route('register') }}" class="glass-panel-dark hover:bg-white/20 text-white px-6 py-3 rounded-xl font-semibold transition-colors">
                             Book a Court

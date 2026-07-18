@@ -30,4 +30,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function (){
     Route::get('/laporan/cetak', [App\Http\Controllers\AdminController::class, 'cetakLaporan'])->name('admin.laporan.cetak');
 });
 
+Route::get('/ketersediaan', [App\Http\Controllers\HomeController::class, 'ketersediaan'])->name('ketersediaan');
+Route::get('/api/jadwal', [App\Http\Controllers\HomeController::class, 'getJadwal']);
 require __DIR__.'/auth.php';
