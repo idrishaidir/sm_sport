@@ -219,25 +219,25 @@
                     <div class="grid grid-cols-2 gap-4 mt-auto">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center text-secondary">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
+                                <span class="material-symbols-outlined">check</span>
                             </div>
                             <span class="font-semibold text-sm text-primary">Quality Courts</span>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center text-secondary">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span class="material-symbols-outlined">sentiment_satisfied</span>
                             </div>
                             <span class="font-semibold text-sm text-primary">Friendly Service</span>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center text-secondary">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span class="material-symbols-outlined">check_circle</span>
                             </div>
                             <span class="font-semibold text-sm text-primary">Safe Environment</span>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 bg-orange-50 rounded-lg flex items-center justify-center text-highlight">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                                <span class="material-symbols-outlined">mobile_2</span>
                             </div>
                             <span class="font-semibold text-sm text-primary">Easy Online Reservation</span>
                         </div>
@@ -269,7 +269,7 @@
                                 </ul>
                             </div>
                             <div class="w-12 h-12 glass-panel rounded-full flex items-center justify-center text-white transform transition-transform group-hover:translate-x-2">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
+                                <span class="material-symbols-outlined">chevron_right</span>
                             </div>
                         </div>
                     </div>
@@ -290,7 +290,7 @@
                                 </ul>
                             </div>
                             <div class="w-12 h-12 glass-panel rounded-full flex items-center justify-center text-white transform transition-transform group-hover:translate-x-2">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
+                                <span class="material-symbols-outlined">chevron_right</span>
                             </div>
                         </div>
                     </div>
@@ -309,7 +309,7 @@
                 <!-- Card 1 -->
                 <div class="bento-card p-6 flex flex-col items-start hover:-translate-y-2">
                     <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-secondary mb-4">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        <span class="material-symbols-outlined">enterprise</span>
                     </div>
                     <h4 class="text-lg font-bold text-primary mb-2">Professional Standard</h4>
                     <p class="text-text/70 text-sm">Courts and equipment maintained to meet professional sporting criteria.</p>
@@ -317,7 +317,7 @@
                 <!-- Card 2 -->
                 <div class="bento-card p-6 flex flex-col items-start hover:-translate-y-2">
                     <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-secondary mb-4">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                        <span class="material-symbols-outlined">cleaning_services</span>
                     </div>
                     <h4 class="text-lg font-bold text-primary mb-2">Clean Facilities</h4>
                     <p class="text-text/70 text-sm">Rigorous daily cleaning protocols ensuring a hygienic and fresh environment.</p>
@@ -325,7 +325,7 @@
                 <!-- Card 3 -->
                 <div class="bento-card p-6 flex flex-col items-start hover:-translate-y-2">
                     <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center text-highlight mb-4">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                        <span class="material-symbols-outlined">mobile_2</span>
                     </div>
                     <h4 class="text-lg font-bold text-primary mb-2">Easy Online Booking</h4>
                     <p class="text-text/70 text-sm">A supporting service to easily secure your court from your phone.</p>
@@ -333,7 +333,7 @@
                 <!-- Card 4 -->
                 <div class="bento-card p-6 flex flex-col items-start hover:-translate-y-2">
                     <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-secondary mb-4">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="material-symbols-outlined">more_time</span>
                     </div>
                     <h4 class="text-lg font-bold text-primary mb-2">Real-Time Availability</h4>
                     <p class="text-text/70 text-sm">Transparent scheduling system so you know exactly when courts are open.</p>
@@ -341,7 +341,7 @@
                 <!-- Card 5 -->
                 <div class="bento-card p-6 flex flex-col items-start hover:-translate-y-2">
                     <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-secondary mb-4">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="material-symbols-outlined">attach_money</span>
                     </div>
                     <h4 class="text-lg font-bold text-primary mb-2">Affordable Pricing</h4>
                     <p class="text-text/70 text-sm">Experience premium sports infrastructure at highly competitive rates.</p>
@@ -349,7 +349,7 @@
                 <!-- Card 6 -->
                 <div class="bento-card p-6 flex flex-col items-start hover:-translate-y-2">
                     <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-secondary mb-4">
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        <span class="material-symbols-outlined">emoji_people</span>
                     </div>
                     <h4 class="text-lg font-bold text-primary mb-2">Friendly Staff</h4>
                     <p class="text-text/70 text-sm">Our community-focused team is always ready to assist and welcome you.</p>
