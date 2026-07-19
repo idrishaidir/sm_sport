@@ -18,9 +18,9 @@
             </div>
         </div>
 
-        @if(session('success'))
+        @if(session('success') || session('Succes'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-6 font-medium">
-            {{ session('success') }}
+            {{ session('success') ?? session('Succes') }}
         </div>
         @endif
 
@@ -42,6 +42,7 @@
                         <th class="py-4 px-6 font-semibold">Jadwal Main</th>
                         <th class="py-4 px-6 font-semibold">Total Bayar</th>
                         <th class="py-4 px-6 font-semibold">Status & Bukti</th>
+                        <th class="py-4 px-6 font-semibold">Keterangan</th>
                         <th class="py-4 px-6 font-semibold text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -55,11 +56,12 @@
                         </td>
                         <td class="py-4 px-6 font-bold text-green-700">Rp {{ number_format($res->total_bayar, 0, ',', '.') }}</td>
                         
-                        <td class="py-4 px-6">
+                        <!-- TAMBAHAN CLASS: status-cell -->
+                        <td class="py-4 px-6 status-cell">
                             @if($res->status == 'Lunas')
                                 <span class="px-3 py-1 bg-green-50 text-green-600 rounded-lg text-xs font-bold">Lunas</span>
-                            @elseif($res->status == 'Batal')
-                                <span class="px-3 py-1 bg-red-50 text-red-600 rounded-lg text-xs font-bold">Batal</span>
+                            @elseif($res->status == 'Gagal')
+                                <span class="px-3 py-1 bg-red-50 text-red-600 rounded-lg text-xs font-bold">Gagal</span>
                             @else
                                 <span class="px-3 py-1 bg-orange-50 text-orange-600 rounded-lg text-xs font-bold mb-2 inline-block">Pending</span>
                             @endif
@@ -76,6 +78,17 @@
                         </td>
 
                         <td class="py-4 px-6">
+                            <form action="{{route('admin.reservasi.status', $res->id)}}" method="POST" id="form-tolak-{{$res->id}}">
+                                @csrf
+                                <!-- Tambahkan baris ini agar saat di-Enter statusnya ikut terkirim -->
+                                <input type="hidden" name="status" value="Gagal">
+                                
+                                <input type="text" name="keterangan" placeholder="Alasan Gagal" class="w-48 border border-gray-200 rounded-lg px-2 py-1 text-xs focus:ring-1 focus:ring-primary">
+                            </form>
+                        </td>
+
+                        <!-- TAMBAHAN CLASS: aksi-cell -->
+                        <td class="py-4 px-6 aksi-cell">
                             @if($res->status == 'Pending' && $res->bukti_bayar)
                             <div class="flex items-center justify-center gap-2">
                                 <form action="{{ route('admin.reservasi.status', $res->id) }}" method="POST">
@@ -86,13 +99,9 @@
                                     </button>
                                 </form>
 
-                                <form action="{{ route('admin.reservasi.status', $res->id) }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="status" value="Batal">
-                                    <button type="submit" onclick="return confirm('Tolak dan batalkan pesanan ini?')" class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg title='Tolak' transition-colors">
-                                        <span class="material-symbols-outlined text-sm">cancel</span>
-                                    </button>
-                                </form>
+                                <button type="button" onclick="tolakDenganKeterangan('form-tolak-{{ $res->id }}')" class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg title='Tolak' transition-colors">
+                                    <span class="material-symbols-outlined text-sm">cancel</span>
+                                </button>
                             </div>
                             @else
                                 <div class="text-center text-gray-300">-</div>
@@ -101,7 +110,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="py-10 text-center text-gray-400">Belum ada data reservasi masuk.</td>
+                        <td colspan="6" class="py-10 text-center text-gray-400">Belum ada data reservasi masuk.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -111,7 +120,6 @@
 @endsection
 
 @push('scripts')
-    <!-- Script AJAX Polling & Suara dipindah ke dalam @push('scripts') -->
     <script>
         let izinSuara = sessionStorage.getItem('izin_suara');
         
@@ -134,9 +142,11 @@
             document.getElementById('teksSuara').innerText = 'Suara Aktif';
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            let lastValidasiCount = parseInt(document.getElementById('data-validasi-count').value) || 0;
+        function tolakDenganKeterangan(formId) {
+            document.getElementById(formId).submit();
+        }
 
+        document.addEventListener('DOMContentLoaded', function() {
             setInterval(function() {
                 fetch(window.location.href)
                     .then(response => response.text())
@@ -144,22 +154,41 @@
                         let parser = new DOMParser();
                         let doc = parser.parseFromString(html, 'text/html');
 
-                        let newCount = parseInt(doc.getElementById('data-validasi-count').value) || 0;
-
-                        document.getElementById('tabel-reservasi').innerHTML = doc.getElementById('tabel-reservasi').innerHTML;
-                        document.getElementById('badge-container').innerHTML = doc.getElementById('badge-container').innerHTML;
-                        document.getElementById('data-validasi-count').value = newCount;
-
-                        if (newCount > lastValidasiCount) {
-                            if (sessionStorage.getItem('izin_suara') === 'true') {
-                                let audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
-                                audio.play().catch(e => console.log(e));
-                            } else {
-                                alert("TING TONG! Ada bukti pembayaran baru yang butuh validasi!");
-                            }
+                        // 1. Update Notifikasi Atas (Bukan overview-stats)
+                        let badgeLama = document.getElementById('badge-container');
+                        let badgeBaru = doc.getElementById('badge-container');
+                        if (badgeLama && badgeBaru) {
+                            badgeLama.innerHTML = badgeBaru.innerHTML;
                         }
-                        
-                        lastValidasiCount = newCount;
+
+                        // 2. Logika Update Tabel Tanpa Merusak Input
+                        let tbodyLama = document.getElementById('tabel-reservasi');
+                        let tabelLama = tbodyLama.querySelectorAll('tr');
+                        let tabelBaru = doc.getElementById('tabel-reservasi').querySelectorAll('tr');
+
+                        // Jika jumlah baris berubah (ada pesanan baru masuk), terpaksa update seluruh tabel
+                        if (tabelLama.length !== tabelBaru.length) {
+                            tbodyLama.innerHTML = doc.getElementById('tabel-reservasi').innerHTML;
+                        } else {
+                            // Jika jumlah baris sama, update elemen status dan aksi saja
+                            tabelBaru.forEach((row, index) => {
+                                if (tabelLama[index]) {
+                                    // Update kolom Status & Bukti
+                                    let statusLama = tabelLama[index].querySelector('.status-cell');
+                                    let statusBaru = row.querySelector('.status-cell');
+                                    if (statusLama && statusBaru && statusLama.innerHTML !== statusBaru.innerHTML) {
+                                        statusLama.innerHTML = statusBaru.innerHTML;
+                                    }
+
+                                    // Update kolom Aksi (Tombol Terima/Tolak)
+                                    let aksiLama = tabelLama[index].querySelector('.aksi-cell');
+                                    let aksiBaru = row.querySelector('.aksi-cell');
+                                    if (aksiLama && aksiBaru && aksiLama.innerHTML !== aksiBaru.innerHTML) {
+                                        aksiLama.innerHTML = aksiBaru.innerHTML;
+                                    }
+                                }
+                            });
+                        }
                     })
                     .catch(error => console.log("Sedang memuat data..."));
             }, 5000);

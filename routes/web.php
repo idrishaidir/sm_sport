@@ -15,19 +15,38 @@ Route::get('/dashboard', function () {
         return redirect()->route('admin.dashboard');
     }
 
-    $reservasis = Reservasi::with('lapangan')
-        ->where('user_id', Auth::id())
-        ->orderBy('tanggal', 'desc')
-        ->orderBy('jam_mulai', 'desc')
-        ->get();
+    Reservasi::where('user_id', Auth::id())
+        ->where('status', 'Pending')
+        ->whereNull('bukti_bayar')
+        ->where('batas_waktu_bayar', '<', now())
+        ->update([
+            'status' => 'Gagal',
+            'keterangan' => 'Waktu pembayaran 15 menit habis.'
+        ]);
 
     $total_reservasi = $reservasis->count();
+
     $menunggu_pembayaran = $reservasis->where('status', 'Pending')->count();
     $total_pengeluaran = $reservasis->where('status', 'Lunas')->sum('total_bayar');
 
-    $upcoming = $reservasis ->where('tanggal', '>=', now()->toDateString())
-                            ->whereIn('status', ['Pending', 'Lunas'])
-                            ->first();
+    $upcoming = $reservasis->where('status', 'Pending')->first();
+
+    if(request()->has('show')){
+        $upcoming = $reservasis->where('id', request('show'))->first();
+    }else{
+        $upcoming = $reservasis ->where('status', 'Pending')
+                                ->where('batas_waktu_bayar', '>', now())
+                                ->first();
+
+        if(!$upcoming){
+            $upcoming = $reservasis ->where('status', 'Lunas')
+                                    ->where('tanggal', '>=', now()->toDateString())
+                                    -> sortBy(function($item){
+                                    return $item->tanggal . ' ' . $item->jam_mulai;
+                                    })
+                                    ->first();
+        }
+    }
 
     return view('dashboard', compact('reservasis', 'total_reservasi', 'menunggu_pembayaran', 'total_pengeluaran', 'upcoming'));
 })->middleware(['auth', 'verified'])->name('dashboard');

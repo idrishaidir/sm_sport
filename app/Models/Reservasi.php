@@ -14,6 +14,7 @@ class Reservasi extends Model
         'durasi_jam',
         'total_bayar',
         'status',
+        'keterangan',
         'bukti_bayar',
         'batas_waktu_bayar'
     ];

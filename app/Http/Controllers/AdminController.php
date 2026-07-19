@@ -63,9 +63,10 @@ class AdminController extends Controller
         $reservasi = Reservasi::findOrFail($id);
         $reservasi->update([
             'status' => $request->status,
+            'keterangan' => $request->keterangan ?? null,
         ]);
 
-        if($request->status == 'Batal' && $reservasi->bukti_bayar){
+        if($request->status == 'Gagal' && $reservasi->bukti_bayar){
             Storage::delete('public/bukti/bayar/' . $reservasi->bukti_bayar);
             $reservasi->update(['bukti_bayar' => null]);
         }

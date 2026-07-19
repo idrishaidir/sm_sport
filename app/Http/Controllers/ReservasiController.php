@@ -73,7 +73,10 @@ class ReservasiController extends Controller
         $reservasi = Reservasi::findOrFail($id);
 
         if (now()->greaterThan($reservasi->batas_waktu_bayar)){
-            $reservasi->update(['status' => 'Batal']);
+            $reservasi->update([
+                'status' => 'Gagal',
+                'keterangan' => 'Waktu pembayaran 15 menit telah habis.'
+                ]);
             return back()->with('error', 'Waktu Pembayaran telah Habis. Pesanan dibatalkan otomatis.');
         }
 

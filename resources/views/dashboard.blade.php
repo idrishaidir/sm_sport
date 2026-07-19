@@ -60,6 +60,8 @@
                             <th class="pb-3 font-semibold">Lapangan</th>
                             <th class="pb-3 font-semibold">Total</th>
                             <th class="pb-3 font-semibold">Status</th>
+                            <th class="pb-3 font-semibold">Keterangan</th>
+
                         </tr>
                     </thead>
                     <tbody class="text-sm">
@@ -71,7 +73,10 @@
                             <td class="py-4">
                                 @if($res->status == 'Lunas') <span class="px-3 py-1 bg-green-50 text-green-600 border border-green-200 rounded-lg text-xs font-semibold">Lunas</span>
                                 @elseif($res->status == 'Pending') <span class="px-3 py-1 bg-orange-50 text-orange-600 border border-orange-200 rounded-lg text-xs font-semibold">Pending</span>
-                                @else <span class="px-3 py-1 bg-red-50 text-red-600 border border-red-200 rounded-lg text-xs font-semibold">Batal</span> @endif
+                                @else <span class="px-3 py-1 bg-red-50 text-red-600 border border-red-200 rounded-lg text-xs font-semibold">Gagal</span> @endif
+                            </td>
+                            <td class="py-4 text-xs text-gray-500 max-w-[150px] truncate" title="{{ $res->keterangan }}">
+                                {{$res->keterangan ?? '-'}}
                             </td>
                         </tr>
                         @empty
@@ -88,11 +93,10 @@
             <!-- HASH TRACKER UNTUK MENDETEKSI PERUBAHAN -->
             <input type="hidden" id="upcoming-hash" value="{{ $upcoming ? $upcoming->id . '-' . $upcoming->status . '-' . ($upcoming->bukti_bayar ? '1' : '0') : 'none' }}">
 
-            <!-- ID upcoming-jadwal untuk Update Realtime -->
             <div id="upcoming-jadwal" class="bento-card p-6 bg-slate-800 text-white relative overflow-hidden">
                 <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
                     <span class="material-symbols-outlined text-highlight">event_upcoming</span>
-                    Jadwal Terdekat
+                    Detail Transaksi
                 </h2>
 
                 @if($upcoming)
