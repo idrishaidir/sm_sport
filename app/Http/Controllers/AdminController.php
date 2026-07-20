@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Reservasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\StatusReservasiNotification;
 
 class AdminController extends Controller
 {
@@ -16,8 +17,9 @@ class AdminController extends Controller
 
         $reservasis = Reservasi::with(['user', 'lapangan'])->latest()->get();
 
+        $tglBatas = now()->subDays(3);
         $kadaluarsa = Reservasi::whereNotNull('bukti_bayar')
-            ->where('updated_at', '<', now()->subDays(2))
+            ->where('tanggal', '<', $tglBatas)
             ->get();
 
         foreach ($kadaluarsa as $res){
@@ -48,11 +50,15 @@ class AdminController extends Controller
     {
         $query = Reservasi::with(['user', 'lapangan']);
 
-        if ($request->filled('start_date') && $request->filled('end_date')){
+        if ($request->start_date && $request->end_date) {
             $query->whereBetween('tanggal', [$request->start_date, $request->end_date]);
         }
 
-        $reservasis = $query->orderBy('tanggal', 'desc')->orderBy('jam_mulai', 'desc')->get();
+
+        $reservasis = $query->orderBy('tanggal', 'desc')
+                        ->orderBy('jam_mulai', 'desc')
+                        ->get();
+
         return view('admin.cetak-laporan', compact('reservasis'));
     }
 
@@ -66,11 +72,9 @@ class AdminController extends Controller
             'keterangan' => $request->keterangan ?? null,
         ]);
 
-        if($request->status == 'Gagal' && $reservasi->bukti_bayar){
-            Storage::delete('public/bukti/bayar/' . $reservasi->bukti_bayar);
-            $reservasi->update(['bukti_bayar' => null]);
-        }
-
-        return back()->with('Succes', 'Status reservasi Berhasil diperbarui');
+        if ($reservasi->user) {
+                $reservasi->user->notify(new StatusReservasiNotification($reservasi));
+            }
+        return back()->with('succes', 'Status reservasi berhasil diperbarui dan notifikasi email telah dikirim ke pelanggan.');
     }
 }

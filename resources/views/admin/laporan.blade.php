@@ -26,7 +26,10 @@
                     <button type="submit" class="w-full bg-primary hover:bg-green-800 text-white font-semibold py-2.5 rounded-xl transition-colors text-sm">
                         Filter Data
                     </button>
-                    <button type="submit" formaction="{{ url('/admin/cetak-laporan') }}" formtarget="_blank" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2.5 rounded-xl transition-colors flex justify-center items-center gap-1 text-sm shadow-md">
+                    <button type="submit" 
+                            formaction="{{ route('admin.laporan.cetak') }}" 
+                            formtarget="_blank" 
+                            class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2.5 rounded-xl transition-colors flex justify-center items-center gap-1 text-sm shadow-md">
                         <span class="material-symbols-outlined text-sm">print</span> Cetak PDF
                     </button>
                 </div>

@@ -127,91 +127,102 @@
 
 @push('scripts')
     <!-- Script Fetch API Terintegrasi -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Ambil elemen dari form sebelah kiri
-            const tglInput = document.getElementById('tanggal');
-            const lapInput = document.getElementById('lapangan_id');
-            const jamInput = document.getElementById('jam_mulai');
-            const container = document.getElementById('slot-container');
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tglInput = document.getElementById('tanggal');
+        const lapInput = document.getElementById('lapangan_id');
+        const jamInput = document.getElementById('jam_mulai');
+        const container = document.getElementById('slot-container');
 
-            const jamOperasional = [
-                '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', 
-                '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00'
-            ];
+        const jamOperasional = [
+            '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', 
+            '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00'
+        ];
 
-            function cekJadwal() {
-                const tanggal = tglInput.value;
-                const lapangan_id = lapInput.value;
+        // Tambahkan parameter isAutoRefresh agar loading spinner tidak muncul 
+        // berulang kali di layar pengguna saat auto-refresh berjalan di background
+        function cekJadwal(isAutoRefresh = false) {
+            const tanggal = tglInput.value;
+            const lapangan_id = lapInput.value;
 
-                if (!tanggal || !lapangan_id) {
+            // Jika form belum diisi, hentikan fungsi
+            if (!tanggal || !lapangan_id) {
+                if (!isAutoRefresh) {
                     container.innerHTML = `
                         <div class="col-span-full py-16 text-center border-dashed border-2 border-gray-200 rounded-xl">
                             <span class="material-symbols-outlined text-gray-300 text-6xl mb-3">touch_app</span>
                             <p class="text-text/50 font-medium text-lg">Silakan pilih lapangan di form sebelah kiri terlebih dahulu.</p>
                         </div>`;
-                    return;
                 }
+                return;
+            }
 
+            // Tampilkan loading HANYA jika dipicu dari klik/change pengguna (bukan auto refresh)
+            if (!isAutoRefresh) {
                 container.innerHTML = `
                     <div class="col-span-full py-20 text-center flex flex-col items-center justify-center">
                         <span class="material-symbols-outlined text-secondary animate-spin text-4xl mb-3">refresh</span>
                         <p class="text-secondary font-medium text-lg">Memuat data ketersediaan...</p>
                     </div>`;
-
-                fetch(`/api/jadwal?tanggal=${tanggal}&lapangan_id=${lapangan_id}`)
-                    .then(response => response.json())
-                    .then(bookedSlots => {
-                        if (!Array.isArray(bookedSlots)) {
-                            container.innerHTML = `<div class="col-span-full text-center text-red-500 py-6 font-medium bg-red-50 rounded-xl">Terjadi kesalahan di server.</div>`;
-                            return; 
-                        }
-
-                        container.innerHTML = ''; 
-
-                        jamOperasional.forEach(jam => {
-                            const isBooked = bookedSlots.includes(jam);
-                            const div = document.createElement('div');
-                            
-                            if (isBooked) {
-                                div.className = 'py-4 px-2 rounded-xl border-2 border-gray-200 bg-gray-100 text-gray-400 text-center cursor-not-allowed flex flex-col items-center gap-1';
-                                div.innerHTML = `
-                                    <span class="font-bold text-lg">${jam}</span> 
-                                    <span class="text-[10px] font-medium bg-gray-200 px-2 py-0.5 rounded text-gray-500 uppercase tracking-wider">Dipesan</span>`;
-                            } else {
-                                // Tambahkan fitur click untuk mengisi input Jam Mulai
-                                div.className = 'py-4 px-2 rounded-xl border-2 border-secondary/30 bg-green-50 text-primary text-center font-semibold transition-all hover:bg-secondary hover:text-white hover:border-secondary hover:-translate-y-1 shadow-sm cursor-pointer flex flex-col items-center gap-1 group';
-                                div.innerHTML = `
-                                    <span class="font-bold text-lg">${jam}</span> 
-                                    <span class="text-[10px] font-medium bg-white/50 px-2 py-0.5 rounded text-primary group-hover:text-white uppercase tracking-wider">Pilih</span>`;
-                                
-                                // Event listener ketika user klik kotak hijau
-                                div.addEventListener('click', function() {
-                                    jamInput.value = jam;
-                                    
-                                    // Berikan efek visual sebentar agar user tahu jam sudah terpilih
-                                    div.classList.add('ring-4', 'ring-secondary', 'ring-opacity-50');
-                                    setTimeout(() => {
-                                        div.classList.remove('ring-4', 'ring-secondary', 'ring-opacity-50');
-                                    }, 300);
-                                });
-                            }
-                            
-                            container.appendChild(div);
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        container.innerHTML = `<div class="col-span-full text-center text-red-500 py-6 font-medium bg-red-50 rounded-xl">Gagal menghubungi server.</div>`;
-                    });
             }
 
-            // Panggil cekJadwal saat pengguna mengganti tanggal atau lapangan
-            tglInput.addEventListener('change', cekJadwal);
-            lapInput.addEventListener('change', cekJadwal);
-            
-            // Panggil sekali saat halaman dimuat (jika ada nilai default)
-            if(lapInput.value) cekJadwal();
-        });
-    </script>
+            // Fetch ke API
+            fetch(`/api/jadwal?tanggal=${tanggal}&lapangan_id=${lapangan_id}`)
+                .then(response => response.json())
+                .then(bookedSlots => {
+                    if (!Array.isArray(bookedSlots)) {
+                        container.innerHTML = `<div class="col-span-full text-center text-red-500 py-6 font-medium bg-red-50 rounded-xl">Terjadi kesalahan di server.</div>`;
+                        return; 
+                    }
+
+                    container.innerHTML = ''; 
+
+                    jamOperasional.forEach(jam => {
+                        const isBooked = bookedSlots.includes(jam);
+                        const div = document.createElement('div');
+                        
+                        if (isBooked) {
+                            div.className = 'py-4 px-2 rounded-xl border-2 border-gray-200 bg-gray-100 text-gray-400 text-center cursor-not-allowed flex flex-col items-center gap-1';
+                            div.innerHTML = `
+                                <span class="font-bold text-lg">${jam}</span> 
+                                <span class="text-[10px] font-medium bg-gray-200 px-2 py-0.5 rounded text-gray-500 uppercase tracking-wider">Dipesan</span>`;
+                        } else {
+                            // Cek jika jam ini sedang dipilih oleh user di form input
+                            const isSelected = jamInput.value === jam;
+                            
+                            div.className = `py-4 px-2 rounded-xl border-2 text-center font-semibold transition-all hover:-translate-y-1 shadow-sm cursor-pointer flex flex-col items-center gap-1 group ${isSelected ? 'border-secondary bg-secondary text-white ring-2 ring-secondary ring-offset-2' : 'border-secondary/30 bg-green-50 text-primary hover:bg-secondary hover:text-white hover:border-secondary'}`;
+                            div.innerHTML = `
+                                <span class="font-bold text-lg">${jam}</span> 
+                                <span class="text-[10px] font-medium ${isSelected ? 'bg-white text-secondary' : 'bg-white/50 text-primary group-hover:text-white'} px-2 py-0.5 rounded uppercase tracking-wider">${isSelected ? 'Dipilih' : 'Pilih'}</span>`;
+                            
+                            div.addEventListener('click', function() {
+                                jamInput.value = jam;
+                                cekJadwal(false); // Refresh visual segera setelah user klik
+                            });
+                        }
+                        
+                        container.appendChild(div);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Jangan timpa container dengan error jika ini hanya background auto-refresh yang gagal karena koneksi lambat
+                    if (!isAutoRefresh) {
+                        container.innerHTML = `<div class="col-span-full text-center text-red-500 py-6 font-medium bg-red-50 rounded-xl">Gagal menghubungi server.</div>`;
+                    }
+                });
+        }
+
+        // Panggil cekJadwal (dengan loading) saat input diubah manual
+        tglInput.addEventListener('change', () => cekJadwal(false));
+        lapInput.addEventListener('change', () => cekJadwal(false));
+        
+        // Panggil cekJadwal diam-diam (tanpa loading) setiap 5 detik
+        setInterval(() => {
+            cekJadwal(true);
+        }, 5000);
+        
+        if(lapInput.value) cekJadwal(false);
+    });
+</script>
 @endpush

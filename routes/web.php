@@ -5,6 +5,7 @@ use App\Http\Controllers\ReservasiController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Models\Reservasi;
+use Illuminate\Support\Facades\Response;
 
 use Illuminate\Support\Facades\Route;
 
@@ -23,7 +24,8 @@ Route::get('/dashboard', function () {
             'status' => 'Gagal',
             'keterangan' => 'Waktu pembayaran 15 menit habis.'
         ]);
-
+    
+    $reservasis = Reservasi::where('user_id', auth()->id())->latest()->get();
     $total_reservasi = $reservasis->count();
 
     $menunggu_pembayaran = $reservasis->where('status', 'Pending')->count();
@@ -34,18 +36,9 @@ Route::get('/dashboard', function () {
     if(request()->has('show')){
         $upcoming = $reservasis->where('id', request('show'))->first();
     }else{
-        $upcoming = $reservasis ->where('status', 'Pending')
-                                ->where('batas_waktu_bayar', '>', now())
-                                ->first();
-
-        if(!$upcoming){
-            $upcoming = $reservasis ->where('status', 'Lunas')
-                                    ->where('tanggal', '>=', now()->toDateString())
-                                    -> sortBy(function($item){
-                                    return $item->tanggal . ' ' . $item->jam_mulai;
-                                    })
-                                    ->first();
-        }
+        $upcoming = Reservasi::where('user_id', auth()->id())
+                            ->latest()
+                            ->first();
     }
 
     return view('dashboard', compact('reservasis', 'total_reservasi', 'menunggu_pembayaran', 'total_pengeluaran', 'upcoming'));
@@ -72,4 +65,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function (){
 
 Route::get('/ketersediaan', [App\Http\Controllers\HomeController::class, 'ketersediaan'])->name('ketersediaan');
 Route::get('/api/jadwal', [App\Http\Controllers\HomeController::class, 'getJadwal']);
+
+Route::get('/gambar-bukti/{filename}', function ($filename) {
+    if (!Storage::disk('public')->exists('bukti_bayar/' . $filename)) {
+        abort(404); 
+    }
+
+    $path = Storage::disk('public')->path('bukti_bayar/' . $filename);
+    
+    return Response::file($path);
+})->name('lihat.bukti');
 require __DIR__.'/auth.php';

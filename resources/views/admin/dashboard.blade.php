@@ -18,9 +18,9 @@
             </div>
         </div>
 
-        @if(session('success') || session('Succes'))
+        @if(session('success'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-6 font-medium">
-            {{ session('success') ?? session('Succes') }}
+            {{ session('success')}}
         </div>
         @endif
 
@@ -68,8 +68,10 @@
 
                             @if($res->bukti_bayar)
                                 <div class="mt-2">
-                                    <a href="{{ asset('storage/bukti_bayar/' . $res->bukti_bayar) }}" target="_blank" class="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded hover:bg-blue-100 flex items-center gap-1 inline-flex">
-                                        <span class="material-symbols-outlined text-[14px]">image</span> Lihat Struk
+                                    <a href="{{ route('lihat.bukti', $res->bukti_bayar) }}" target="_blank" ...>
+                                        <a href="{{ asset('storage/bukti_bayar/' . $res->bukti_bayar) }}" target="_blank" class="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded hover:bg-blue-100 flex items-center gap-1 inline-flex">
+                                            <span class="material-symbols-outlined text-[14px]">image</span> Lihat Struk
+                                        </a>
                                     </a>
                                 </div>
                             @elseif($res->status == 'Pending')
@@ -147,48 +149,35 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            function hitungBukti() {
+                return document.querySelectorAll('.status-cell a[href*="bukti_bayar"]').length;
+            }
+
+            let jumlahBuktiTerakhir = hitungBukti();
+
             setInterval(function() {
                 fetch(window.location.href)
                     .then(response => response.text())
                     .then(html => {
                         let parser = new DOMParser();
                         let doc = parser.parseFromString(html, 'text/html');
+                        
+                        // 2. Hitung jumlah bukti dari data terbaru yang di-fetch
+                        let jumlahBuktiBaru = doc.querySelectorAll('.status-cell a[href*="bukti_bayar"]').length;
 
-                        // 1. Update Notifikasi Atas (Bukan overview-stats)
-                        let badgeLama = document.getElementById('badge-container');
-                        let badgeBaru = doc.getElementById('badge-container');
-                        if (badgeLama && badgeBaru) {
-                            badgeLama.innerHTML = badgeBaru.innerHTML;
+                        // 3. DETEKSI: Jika jumlah bukti bertambah, berarti ada user baru yang upload
+                        if (jumlahBuktiBaru > jumlahBuktiTerakhir) {
+                            if (sessionStorage.getItem('izin_suara') === 'true') {
+                                let audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+                                audio.play().catch(e => console.error("Audio gagal diputar:", e));
+                            }
+                            jumlahBuktiTerakhir = jumlahBuktiBaru;
                         }
 
-                        // 2. Logika Update Tabel Tanpa Merusak Input
+                        // --- SISA LOGIKA UPDATE UI ANDA TETAP SAMA ---
+                        // (Update isi tabel seperti biasa agar Admin langsung melihat bukti tersebut)
                         let tbodyLama = document.getElementById('tabel-reservasi');
-                        let tabelLama = tbodyLama.querySelectorAll('tr');
-                        let tabelBaru = doc.getElementById('tabel-reservasi').querySelectorAll('tr');
-
-                        // Jika jumlah baris berubah (ada pesanan baru masuk), terpaksa update seluruh tabel
-                        if (tabelLama.length !== tabelBaru.length) {
-                            tbodyLama.innerHTML = doc.getElementById('tabel-reservasi').innerHTML;
-                        } else {
-                            // Jika jumlah baris sama, update elemen status dan aksi saja
-                            tabelBaru.forEach((row, index) => {
-                                if (tabelLama[index]) {
-                                    // Update kolom Status & Bukti
-                                    let statusLama = tabelLama[index].querySelector('.status-cell');
-                                    let statusBaru = row.querySelector('.status-cell');
-                                    if (statusLama && statusBaru && statusLama.innerHTML !== statusBaru.innerHTML) {
-                                        statusLama.innerHTML = statusBaru.innerHTML;
-                                    }
-
-                                    // Update kolom Aksi (Tombol Terima/Tolak)
-                                    let aksiLama = tabelLama[index].querySelector('.aksi-cell');
-                                    let aksiBaru = row.querySelector('.aksi-cell');
-                                    if (aksiLama && aksiBaru && aksiLama.innerHTML !== aksiBaru.innerHTML) {
-                                        aksiLama.innerHTML = aksiBaru.innerHTML;
-                                    }
-                                }
-                            });
-                        }
+                        tbodyLama.innerHTML = doc.getElementById('tabel-reservasi').innerHTML;
                     })
                     .catch(error => console.log("Sedang memuat data..."));
             }, 5000);
