@@ -27,8 +27,7 @@ class AdminController extends Controller
             $res->update(['bukti_bayar' => null]);
         }
 
-        $reservasis = Reservasi::with('lapangan', 'user')->orderBy('created_at', 'desc')->get();
-
+        $reservasis = Reservasi::with('lapangan', 'user')->orderBy('created_at', 'desc')->paginate(10);
         $butuhValidasi = Reservasi::where('status', 'Pending')->whereNotNull('bukti_bayar')->count();
         return view('admin.dashboard', compact('totalPendapatan', 'totalReservasi', 'menungguPembayaran', 'reservasis', 'butuhValidasi'));
     }
@@ -62,8 +61,6 @@ class AdminController extends Controller
         return view('admin.cetak-laporan', compact('reservasis'));
     }
 
-
-
     public function updateStatus(Request $request, $id)
     {
         $reservasi = Reservasi::findOrFail($id);
@@ -76,5 +73,40 @@ class AdminController extends Controller
                 $reservasi->user->notify(new StatusReservasiNotification($reservasi));
             }
         return back()->with('succes', 'Status reservasi berhasil diperbarui dan notifikasi email telah dikirim ke pelanggan.');
+    }
+
+    public function storeReservasiCepat(Request $request)
+    {
+        $request->validate([
+            'nama_pelanggan' => 'required|string|max:255',
+            'lapangan_id' => 'required',
+            'tanggal' => 'required|date',
+            'jam_mulai' => 'required',
+            'durasi_jam' => 'required|integer'
+        ]);
+
+        $lapangan = \App\Models\Lapangan::find($request->lapangan_id);
+
+        if(!$lapangan){
+            return back()->with('error', 'Gagal: Lapangan tidak ditemukan. ');
+        }
+
+        $totalBayar = (int)$lapangan->harga_per_jam * (int)$request->durasi_jam;
+
+        $akunTamu =\App\Models\User::where('email', 'tamusmsport@gmail.com')->first();
+
+        $idPengguna = $akunTamu ? $akunTamu->id:\Illuminate\Support\Facades\Auth::id();
+        \App\Models\Reservasi::create([
+            'user_id' => $idPengguna,
+            'lapangan_id' => $request->lapangan_id,
+            'tanggal' => $request->tanggal,
+            'jam_mulai' => $request->jam_mulai,
+            'durasi_jam' => $request->durasi_jam,
+            'total_bayar' => $totalBayar,
+            'status' => 'Lunas',
+            'keterangan' => 'Pesan Ditempat. dipesan oleh: ' . $request->nama_pelanggan
+        ]);
+
+        return back()->with('succes', 'Reservasi Berhasil Dibuat!');
     }
 }

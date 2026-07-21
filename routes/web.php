@@ -44,24 +44,6 @@ Route::get('/dashboard', function () {
     return view('dashboard', compact('reservasis', 'total_reservasi', 'menunggu_pembayaran', 'total_pengeluaran', 'upcoming'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    Route::get('/reservasi/buat', [ReservasiController::class, 'create'])->name('reservasi.create');
-    Route::post('/reservasi/buat', [ReservasiController::class,'store'])->name('reservasi.store');
-    Route::post('/reservasi/{id}/upload-bukti', [ReservasiController::class, 'uploadBukti'])->name('reservasi.upload_bukti');
-    Route::post('admin/reservasi/{id}/status',[AdminController::class, 'updateStatus'])->name('admin.reservasi.status');
-    
-});
-
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function (){
-    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-    Route::post('/reservasi/{id}/status', [AdminController::class, 'updateStatus'])->name('admin.reservasi.status');
-    Route::get('/laporan', [App\Http\Controllers\AdminController::class, 'laporan'])->name('admin.laporan');
-    Route::get('/laporan/cetak', [App\Http\Controllers\AdminController::class, 'cetakLaporan'])->name('admin.laporan.cetak');
-});
 
 Route::get('/ketersediaan', [App\Http\Controllers\HomeController::class, 'ketersediaan'])->name('ketersediaan');
 Route::get('/api/jadwal', [App\Http\Controllers\HomeController::class, 'getJadwal']);
@@ -75,4 +57,31 @@ Route::get('/gambar-bukti/{filename}', function ($filename) {
     
     return Response::file($path);
 })->name('lihat.bukti');
+
+Route::post('/reservasi-cepat', [AdminController::class, 'storeReservasiCepat'])->name('admin.reservasi.cepat');
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/reservasi/buat', [ReservasiController::class, 'create'])->name('reservasi.create');
+    Route::post('/reservasi/buat', [ReservasiController::class,'store'])->name('reservasi.store');
+    Route::post('/reservasi/{id}/upload-bukti', [ReservasiController::class, 'uploadBukti'])->name('reservasi.upload_bukti');
+});
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function (){
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::post('/reservasi/{id}/status', [AdminController::class, 'updateStatus'])->name('admin.reservasi.status');
+    Route::get('/laporan', [App\Http\Controllers\AdminController::class, 'laporan'])->name('admin.laporan');
+    Route::get('/laporan/cetak', [App\Http\Controllers\AdminController::class, 'cetakLaporan'])->name('admin.laporan.cetak');
+    Route::post('admin/reservasi/{id}/status', [AdminController::class, 'updateStatus'])->name('admin.reservasi.status');
+});
+
+Route::middleware(['Auth', 'verified'])->group(function(){
+    Route::get('/reservasi/create', [ReservasiController::class, 'create'])->name('reservasi.create');
+    Route::post('reservasi', [ReservasiController::class, 'store'])->name('reservasi.store');
+});
+
+
 require __DIR__.'/auth.php';
