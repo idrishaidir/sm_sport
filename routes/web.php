@@ -48,15 +48,6 @@ Route::get('/dashboard', function () {
 Route::get('/ketersediaan', [App\Http\Controllers\HomeController::class, 'ketersediaan'])->name('ketersediaan');
 Route::get('/api/jadwal', [App\Http\Controllers\HomeController::class, 'getJadwal']);
 
-Route::get('/gambar-bukti/{filename}', function ($filename) {
-    if (!Storage::disk('public')->exists('bukti_bayar/' . $filename)) {
-        abort(404); 
-    }
-
-    $path = Storage::disk('public')->path('bukti_bayar/' . $filename);
-    
-    return Response::file($path);
-})->name('lihat.bukti');
 
 Route::post('/reservasi-cepat', [AdminController::class, 'storeReservasiCepat'])->name('admin.reservasi.cepat');
 
@@ -68,6 +59,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/reservasi/buat', [ReservasiController::class, 'create'])->name('reservasi.create');
     Route::post('/reservasi/buat', [ReservasiController::class,'store'])->name('reservasi.store');
     Route::post('/reservasi/{id}/upload-bukti', [ReservasiController::class, 'uploadBukti'])->name('reservasi.upload_bukti');
+
+    Route::get('/gambar-bukti/{filename}', function ($filename) {
+        if (!Storage::disk('public')->exists('bukti_bayar/' . $filename)) {
+            abort(404); 
+        }
+
+        $path = Storage::disk('public')->path('bukti_bayar/' . $filename);
+        
+        return Response::file($path);
+    })->name('lihat.bukti');
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function (){

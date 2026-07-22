@@ -34,6 +34,18 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ],[
+            'name.required' => 'Nama lengkap wajib diisi.',
+            'name.string'   => 'Nama harus berupa teks.',
+            'name.max'      => 'Nama maksimal terdiri dari 255 karakter.',
+            
+            'email.required' => 'Alamat email wajib diisi.',
+            'email.email'    => 'Format email tidak valid (harus mengandung @).',
+            'email.unique'   => 'Gagal mendaftar: Email tersebut sudah terdaftar! Silakan gunakan email lain atau masuk (Login).',
+            
+            'password.required'  => 'Kata sandi wajib diisi.',
+            'password.confirmed' => 'Konfirmasi kata sandi tidak cocok. Pastikan Anda mengetik ulang sandi dengan benar.',
+            'password.min'       => 'Kata sandi minimal harus 8 karakter.',
         ]);
 
         $user = User::create([

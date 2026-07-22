@@ -5,7 +5,7 @@
 @section('content')
     <section class="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[minmax(180px,auto)]">
         <div class="bento-card col-span-1 md:col-span-3 md:row-span-2 relative min-h-[400px] md:min-h-0 flex flex-col justify-end p-8 md:p-12 group overflow-hidden">
-            <img src="{{ asset('images/header.png') }}" alt="Fasilitas Olahraga" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+            <img src="{{ asset('images/header.webp') }}" alt="Fasilitas Olahraga" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
             <div class="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/60 to-transparent"></div>
             
             <div class="relative z-10 max-w-2xl text-white">
@@ -90,7 +90,7 @@
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="bento-card col-span-1 md:col-span-1 h-64 md:h-full relative group overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2084&auto=format&fit=crop" alt="Komunitas" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                <img src="{{ asset('images/arena.webp') }}" alt="Komunitas" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
             </div>
             
             <div class="bento-card col-span-1 md:col-span-2 p-8 md:p-12 flex flex-col justify-center bg-white">
@@ -138,7 +138,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="bento-card h-[400px] relative group cursor-pointer overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1587329310686-91414b8e3cb7?q=80&w=2071&auto=format&fit=crop" alt="Lapangan Futsal" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                <img src="{{ asset('images/futsal.webp') }}" alt="Lapangan Futsal" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                 <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 p-8 w-full text-white">
                     <div class="flex justify-between items-end">
@@ -150,15 +150,13 @@
                                 <li>✓ Pencahayaan LED standar turnamen</li>
                             </ul>
                         </div>
-                        <div class="w-12 h-12 glass-panel rounded-full flex items-center justify-center text-white transform transition-transform group-hover:translate-x-2">
-                            <span class="material-symbols-outlined">chevron_right</span>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
 
             <div class="bento-card h-[400px] relative group cursor-pointer overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1551280857-2b9eb02029b4?q=80&w=2070&auto=format&fit=crop" alt="Lapangan Badminton" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                <img src="{{ asset('images/badminton1.webp') }}" alt="Lapangan Badminton" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                 <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 p-8 w-full text-white">
                     <div class="flex justify-between items-end">
@@ -170,9 +168,7 @@
                                 <li>✓ Sirkulasi udara sangat nyaman</li>
                             </ul>
                         </div>
-                        <div class="w-12 h-12 glass-panel rounded-full flex items-center justify-center text-white transform transition-transform group-hover:translate-x-2">
-                            <span class="material-symbols-outlined">chevron_right</span>
-                        </div>
+                       
                     </div>
                 </div>
             </div>
@@ -192,19 +188,19 @@
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[150px]">
             <div class="bento-card col-span-2 row-span-2 group overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1542652735873-fb2825bac6e2?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Aksi Olahraga">
+                <img src="{{ asset('images/futsal1.webp') }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Aksi Olahraga">
             </div>
             <div class="bento-card col-span-1 row-span-1 group overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1596328329606-44439050d535?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Ruang Tunggu">
+                <img src="{{ asset('images/waitingroom.webp') }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Ruang Tunggu">
             </div>
             <div class="bento-card col-span-1 row-span-2 group overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1551280857-2b9eb02029b4?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Lapangan Badminton">
+                <img src="{{ asset('images/badminton.webp') }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Lapangan Badminton">
             </div>
             <div class="bento-card col-span-1 row-span-2 group overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Resepsionis">
+                <img src="{{ asset('images/arena_futsal.webp') }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Lapangan Futsal">
             </div>
             <div class="bento-card col-span-2 row-span-1 group overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1575361204480-aadea25e6e68?q=80&w=2071&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Lapangan Futsal">
+                <img src="{{ asset('images/unnamed.webp') }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Lapangan Futsal">
             </div>
         </div>
     </section>
@@ -214,8 +210,8 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                 <div class="space-y-4">
                     <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 bg-primary rounded-xl flex items-center justify-center text-white font-bold text-sm">SM</div>
-                        <span class="font-bold text-lg text-primary">SM Sport Center</span>
+                                <img src="{{asset('images/logo.png')}}" alt="Logo SM SPORT" class="w-11 rounded-xl flex items-center justify-center">
+                        <span class="font-bold text-lg text-primary">Sport Center</span>
                     </div>
                     <p class="text-xs text-gray-500 leading-relaxed">
                         Penyediaan fasilitas lapangan olahraga premium terbaik dan terlengkap untuk menjaga performa kesehatan Anda secara maksimal.
@@ -237,7 +233,7 @@
                     <ul class="space-y-3 text-xs text-gray-600">
                         <li class="flex items-center gap-2">
                             <span class="material-symbols-outlined text-sm text-secondary">location_on</span>
-                            Jl. Kelapa Gading Raya No. 45, Jakarta
+                            Jl. Kaliabang Tengah No.55
                         </li>
                         <li class="flex items-center gap-2">
                             <span class="material-symbols-outlined text-sm text-secondary">call</span>
@@ -245,7 +241,7 @@
                         </li>
                         <li class="flex items-center gap-2">
                             <span class="material-symbols-outlined text-sm text-secondary">mail</span>
-                            support@smsportcenter.com
+                            smsport@gmail.com
                         </li>
                     </ul>
                 </div>

@@ -3,7 +3,6 @@
 @section('title', 'Buat Reservasi - SM Sport Center')
 
 @section('content')
-    <!-- Notifikasi -->
     @if(session('Succes') || session('success'))
     <div class="bg-green-100 border border-green-400 text-green-700 px-6 py-4 rounded-bento relative flex items-center gap-3 mb-6 shadow-sm">
         <span class="material-symbols-outlined">check_circle</span>
@@ -28,10 +27,8 @@
     </div>
     @endif
 
-    <!-- Grid Layout Kiri & Kanan -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        <!-- KOLOM KIRI: Form Reservasi -->
         <div class="lg:col-span-4 bento-card p-8 self-start">
             <h2 class="text-2xl font-bold text-primary mb-6 flex items-center gap-2">
                 <span class="material-symbols-outlined text-secondary">edit_document</span>
@@ -41,7 +38,6 @@
             <form action="{{ route('reservasi.store') }}" method="POST" class="space-y-5">
                 @csrf
                 
-                <!-- Lapangan -->
                 <div>
                     <label for="lapangan_id" class="block text-sm font-semibold text-text mb-2">Pilih Lapangan</label>
                     <select id="lapangan_id" name="lapangan_id" required class="w-full border-gray-200 bg-gray-50 rounded-xl focus:border-secondary focus:ring-secondary py-3 px-4">
@@ -52,13 +48,11 @@
                     </select>
                 </div>
 
-                <!-- Tanggal -->
                 <div>
                     <label for="tanggal" class="block text-sm font-semibold text-text mb-2">Tanggal Main</label>
                     <input type="date" id="tanggal" name="tanggal" required min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" class="w-full border-gray-200 bg-gray-50 rounded-xl focus:border-secondary focus:ring-secondary py-3 px-4">
                 </div>
      
-                <!-- Jam Mulai -->
                 <div>
                     <label for="jam_mulai" class="block text-sm font-semibold text-text mb-2">Jam Mulai</label>
                     <select id="jam_mulai" name="jam_mulai" required class="w-full border-gray-200 bg-gray-50 rounded-xl focus:border-secondary focus:ring-secondary py-3 px-4">
@@ -71,13 +65,11 @@
                     <p class="text-xs text-gray-500 mt-1">*Pilih dari daftar atau klik blok hijau di sebelah.</p>
                 </div>
 
-                <!-- Durasi -->
                 <div>
                     <label for="durasi_jam" class="block text-sm font-semibold text-text mb-2">Durasi (Jam)</label>
                     <input type="number" id="durasi_jam" name="durasi_jam" required min="1" max="5" value="1" class="w-full border-gray-200 bg-gray-50 rounded-xl focus:border-secondary focus:ring-secondary py-3 px-4">
                 </div>
 
-                <!-- Aturan Waktu Bayar -->
                 <div class="bg-orange-50 p-3 rounded-lg border border-orange-100 text-xs text-orange-700 mt-2">
                     <span class="font-bold block mb-1">Penting:</span>
                     Setelah klik tombol di bawah, Anda akan diarahkan ke Dashboard. Anda wajib upload bukti transfer dalam waktu <strong>15 Menit</strong>.
@@ -89,7 +81,6 @@
             </form>
         </div>
 
-        <!-- KOLOM KANAN: Real-time Ketersediaan -->
         <div class="lg:col-span-8 bento-card p-8">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                 <h2 class="text-2xl font-bold text-primary flex items-center gap-2">
@@ -101,7 +92,6 @@
                 </div>
             </div>
 
-            <!-- Container Hasil -->
             <div id="slot-container" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4 min-h-[300px] content-start">
                 <div class="col-span-full py-16 text-center border-dashed border-2 border-gray-200 rounded-xl">
                     <span class="material-symbols-outlined text-gray-300 text-6xl mb-3">touch_app</span>
@@ -109,7 +99,6 @@
                 </div>
             </div>
 
-            <!-- Keterangan -->
             <div class="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-text/70 border-t border-gray-100 pt-6">
                 <div class="flex items-center gap-2">
                     <span class="w-5 h-5 rounded bg-green-50 border-2 border-secondary flex items-center justify-center"></span> 
@@ -126,7 +115,6 @@
 @endsection
 
 @push('scripts')
-    <!-- Script Fetch API Terintegrasi -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const tglInput = document.getElementById('tanggal');
@@ -139,13 +127,10 @@
             '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00'
         ];
 
-        // Tambahkan parameter isAutoRefresh agar loading spinner tidak muncul 
-        // berulang kali di layar pengguna saat auto-refresh berjalan di background
         function cekJadwal(isAutoRefresh = false) {
             const tanggal = tglInput.value;
             const lapangan_id = lapInput.value;
 
-            // Jika form belum diisi, hentikan fungsi
             if (!tanggal || !lapangan_id) {
                 if (!isAutoRefresh) {
                     container.innerHTML = `
@@ -157,7 +142,6 @@
                 return;
             }
 
-            // Tampilkan loading HANYA jika dipicu dari klik/change pengguna (bukan auto refresh)
             if (!isAutoRefresh) {
                 container.innerHTML = `
                     <div class="col-span-full py-20 text-center flex flex-col items-center justify-center">
@@ -187,7 +171,6 @@
                                 <span class="font-bold text-lg">${jam}</span> 
                                 <span class="text-[10px] font-medium bg-gray-200 px-2 py-0.5 rounded text-gray-500 uppercase tracking-wider">Dipesan</span>`;
                         } else {
-                            // Cek jika jam ini sedang dipilih oleh user di form input
                             const isSelected = jamInput.value === jam;
                             
                             div.className = `py-4 px-2 rounded-xl border-2 text-center font-semibold transition-all hover:-translate-y-1 shadow-sm cursor-pointer flex flex-col items-center gap-1 group ${isSelected ? 'border-secondary bg-secondary text-white ring-2 ring-secondary ring-offset-2' : 'border-secondary/30 bg-green-50 text-primary hover:bg-secondary hover:text-white hover:border-secondary'}`;
@@ -197,7 +180,7 @@
                             
                             div.addEventListener('click', function() {
                                 jamInput.value = jam;
-                                cekJadwal(false); // Refresh visual segera setelah user klik
+                                cekJadwal(false); 
                             });
                         }
                         
@@ -206,18 +189,15 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    // Jangan timpa container dengan error jika ini hanya background auto-refresh yang gagal karena koneksi lambat
                     if (!isAutoRefresh) {
                         container.innerHTML = `<div class="col-span-full text-center text-red-500 py-6 font-medium bg-red-50 rounded-xl">Gagal menghubungi server.</div>`;
                     }
                 });
         }
 
-        // Panggil cekJadwal (dengan loading) saat input diubah manual
         tglInput.addEventListener('change', () => cekJadwal(false));
         lapInput.addEventListener('change', () => cekJadwal(false));
         
-        // Panggil cekJadwal diam-diam (tanpa loading) setiap 5 detik
         setInterval(() => {
             cekJadwal(true);
         }, 5000);

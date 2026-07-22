@@ -10,41 +10,49 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Poppins', 'sans-serif'], },
-                    colors: { primary: '#166534', secondary: '#10B981', accent: '#84CC16', background: '#F8FAF8', surface: '#FFFFFF', text: '#1F2937', highlight: '#F97316', },
-                    borderRadius: { 'bento': '20px', },
-                    boxShadow: { 'bento': '0 8px 30px rgba(0,0,0,0.04)', }
-                }
-            }
-        }
-    </script>
-
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
-        body { background-color: #F8FAF8; color: #1F2937; }
-        .bento-card { background-color: #FFFFFF; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.04); border: 1px solid rgba(16, 185, 129, 0.05); transition: transform 0.3s ease; }
-        .bento-card:hover { transform: translateY(-2px); }
-        .glass-panel { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.5); }
+        body { 
+            background-color: #F8FAF8; 
+            color: #1F2937; 
+        }
+        .bento-card { 
+            background-color: #FFFFFF; 
+            border-radius: 20px; 
+            box-shadow: 0 8px 30px rgba(0,0,0,0.04); 
+            border: 1px solid rgba(16, 185, 129, 0.05); 
+            transition: transform 0.3s ease; 
+        }
+        .bento-card:hover { 
+            transform: translateY(-2px); 
+        }
+        .glass-panel { 
+            background: rgba(255, 255, 255, 0.9); 
+            backdrop-filter: blur(16px); 
+            border: 1px solid rgba(255, 255, 255, 0.5); 
+        }
     </style>
     @stack('styles') 
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
 </head>
 <body class="font-sans antialiased selection:bg-secondary selection:text-white pt-28 pb-10">
 
 <nav x-data="{ openMobile: false }" class="fixed top-4 left-0 right-0 z-50 mx-4 md:mx-auto max-w-7xl glass-panel rounded-bento px-6 py-3.5 flex justify-between items-center shadow-sm backdrop-blur-md bg-white/90 border border-white/20">
-    <a href="{{ url('/') }}" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-        <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-sm">SM</div>
+    <a href="{{ url('/') }}" class="flex items-center gap-1 hover:opacity-80 transition-opacity">
+        <img src="{{asset('images/logo.png')}}" alt="Logo SM SPORT" class="w-11 rounded-xl flex items-center justify-center">
         <span class="font-bold text-xl text-primary hidden sm:block">Sport Center</span>
     </a>
     
     <div class="hidden lg:flex items-center space-x-6">
         <a href="{{ url('/') }}" class="text-text hover:text-primary transition-colors font-medium text-sm">Home</a>
-        <a href="{{ route('ketersediaan') ?? '#' }}" class="text-text hover:text-primary transition-colors font-medium text-sm">Cek Jadwal</a>
+        @auth
+            <a href="{{ route('reservasi.create') ?? '#' }}" class="text-text hover:text-primary transition-colors font-medium text-sm">Buat Pesanan</a>
+
+        @else
+            <a href="{{ route('ketersediaan') ?? '#' }}" class="text-text hover:text-primary transition-colors font-medium text-sm">Cek Jadwal</a>
+        @endauth
         
         <div x-data="{ openDropdown: false }" @click.away="openDropdown = false" class="relative">
             <button @click="openDropdown = !openDropdown" class="flex items-center gap-1 text-text hover:text-primary transition-colors font-medium text-sm focus:outline-none">

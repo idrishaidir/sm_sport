@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class ReservasiController extends Controller
 {
@@ -49,7 +50,14 @@ class ReservasiController extends Controller
 
             $bentrok = Reservasi::where('lapangan_id', $request->lapangan_id)
                 ->where('tanggal', $request->tanggal)
-                ->whereIn('status' , ['Pending', 'Lunas'])
+                ->where(function($query){
+                    $query -> where('status', 'Lunas')
+                            -> orWhere(function($subQuery){
+                                $subQuery ->where('status', 'Pending')
+                                        -> where('batas_waktu_bayar', '>', now());
+                            });
+
+                })
                 ->get()
                 ->contains(function ($jadwal) use ($new_start, $new_end) {
                     $exist_start = strtotime($jadwal->jam_mulai);
@@ -73,6 +81,8 @@ class ReservasiController extends Controller
                 'batas_waktu_bayar' => now()->addMinutes(15)
             ]);
 
+            Cache::forget("jadwal_{$request->lapangan_id}_{$request->tanggal}");
+
             DB::commit(); 
             return redirect()->route('dashboard')->with("success", "Reservasi Berhasil!");
 
@@ -92,7 +102,10 @@ class ReservasiController extends Controller
             'bukti_bayar.mimes' => 'Format gambar harus jpeg, png, atau jpg.',
         ]);
 
-        $reservasi = Reservasi::findOrFail($id);
+        $reservasi = Reservasi::where('user_id', Auth::id())->findOrFail($id);
+        if($reservasi->status !== 'Pending' || $reservasi->bukti_bayar !== null){
+            return back()->with('error', 'Bukti pembayaran sudah diunggah silahkan menunggu proses verifikasi');
+        }
 
         if (now()->greaterThan($reservasi->batas_waktu_bayar)){
             $reservasi->update([
