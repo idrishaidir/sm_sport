@@ -40,23 +40,33 @@
                 </div>
             </div>
 
-            <div>
+            <div x-data="{ show: false }">
                 <label for="password" class="block text-sm font-semibold text-text mb-2">Kata Sandi Baru</label>
                 <div class="relative">
-                    <input type="password" id="password" name="password" required autocomplete="new-password"
+                    <input x-bind:type="show ? 'text' : 'password'" id="password" name="password" required autocomplete="new-password"
                         placeholder="Minimal 8 karakter"
-                        class="w-full border-gray-200 bg-gray-50 rounded-xl focus:border-secondary focus:ring-secondary py-3 px-4 pl-11">
+                        class="w-full border-gray-200 bg-gray-50 rounded-xl focus:border-secondary focus:ring-secondary py-3 px-4 pl-11 pr-12">
                     <span class="material-symbols-outlined absolute left-3.5 top-3.5 text-gray-400 text-xl">lock</span>
+                    
+                    <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors">
+                        <span class="material-symbols-outlined text-lg" x-show="!show">visibility</span>
+                        <span class="material-symbols-outlined text-lg" x-show="show" style="display: none;">visibility_off</span>
+                    </button>
                 </div>
             </div>
 
-            <div>
+            <div x-data="{ show: false }">
                 <label for="password_confirmation" class="block text-sm font-semibold text-text mb-2">Konfirmasi Kata Sandi Baru</label>
                 <div class="relative">
-                    <input type="password" id="password_confirmation" name="password_confirmation" required autocomplete="new-password"
+                    <input x-bind:type="show ? 'text' : 'password'" id="password_confirmation" name="password_confirmation" required autocomplete="new-password"
                         placeholder="Ulangi kata sandi baru"
-                        class="w-full border-gray-200 bg-gray-50 rounded-xl focus:border-secondary focus:ring-secondary py-3 px-4 pl-11">
+                        class="w-full border-gray-200 bg-gray-50 rounded-xl focus:border-secondary focus:ring-secondary py-3 px-4 pl-11 pr-12">
                     <span class="material-symbols-outlined absolute left-3.5 top-3.5 text-gray-400 text-xl">lock</span>
+
+                    <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors">
+                        <span class="material-symbols-outlined text-lg" x-show="!show">visibility</span>
+                        <span class="material-symbols-outlined text-lg" x-show="show" style="display: none;">visibility_off</span>
+                    </button>
                 </div>
             </div>
 

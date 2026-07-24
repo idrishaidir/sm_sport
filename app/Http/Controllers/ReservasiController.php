@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Response;
 
 class ReservasiController extends Controller
 {
@@ -21,21 +22,23 @@ class ReservasiController extends Controller
 
     public function store(Request $request)
     {
+        // Validasi Input
         $request->validate([
             'lapangan_id' => 'required',
             'tanggal' => 'required|date|after_or_equal:today',
             'jam_mulai' => 'required',
             'durasi_jam' => 'required|integer|min:1'
         ]);
-
+        
+        // Menghitung Jam Selesai
         $jam_mulai = (int) date('H', strtotime($request->jam_mulai));
         $durasi = (int) $request->durasi_jam;
         $jam_selesai = $jam_mulai + $durasi;
 
+        // Melakukan Validasi Jam Operasioanl pada Pukul 23.00 dan 22.00
         if ($jam_selesai > 23){
             return back()->with('error', 'Gagal: Melebihi Jam Operasional SM SPORT CENTER pukul 23.00.');
         }
-
         if($jam_mulai == 22 && $durasi > 1){
             return back()->with("error", "Gagal: Untuk Pemesanan jam 22.00, durasi maksimal 1.");
         }
@@ -43,11 +46,14 @@ class ReservasiController extends Controller
         DB::beginTransaction();
 
         try {
+            // Mengambil data lapangan dan menguncinya
             $lapangan = Lapangan::where('id', $request->lapangan_id)->lockForUpdate()->first();
 
+            // Menghitung rentang waktu
             $new_start = strtotime($request->jam_mulai);
             $new_end = strtotime("+". $request->durasi_jam . " hours", $new_start);
 
+            // Melakukan Pengecekan Jadwal Bentrok
             $bentrok = Reservasi::where('lapangan_id', $request->lapangan_id)
                 ->where('tanggal', $request->tanggal)
                 ->where(function($query){
@@ -59,17 +65,20 @@ class ReservasiController extends Controller
 
                 })
                 ->get()
+                // Mengecek Overlap waktu
                 ->contains(function ($jadwal) use ($new_start, $new_end) {
                     $exist_start = strtotime($jadwal->jam_mulai);
                     $exist_end = strtotime("+" . $jadwal->durasi_jam . " hours", $exist_start);
                     return $new_start < $exist_end && $new_end > $exist_start;
                 });
 
+            // mengatur perkondisian bentrok
             if ($bentrok) {
                 DB::rollBack(); 
                 return back()->with('error', 'Gagal: Jadwal berbenturan.');
             }
 
+            // Menyimpan reservasi
             Reservasi::create([
                 'user_id' => Auth::id(),
                 'lapangan_id' => $request->lapangan_id,
@@ -81,8 +90,10 @@ class ReservasiController extends Controller
                 'batas_waktu_bayar' => now()->addMinutes(15)
             ]);
 
+            // Menghapus Cache Jawal
             Cache::forget("jadwal_{$request->lapangan_id}_{$request->tanggal}");
 
+            
             DB::commit(); 
             return redirect()->route('dashboard')->with("success", "Reservasi Berhasil!");
 
@@ -130,4 +141,16 @@ class ReservasiController extends Controller
 
         return back()->with('error', 'Gagal mengunggah file.');
     }
+
+    public function lihatBukti($filename)
+    {
+        if (!Storage::disk('public')->exists('bukti_bayar/' . $filename)) {
+            abort(404); 
+        }
+
+        $path = Storage::disk('public')->path('bukti_bayar/' . $filename);
+        
+        return Response::file($path);
+    }
 }
+

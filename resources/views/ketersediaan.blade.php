@@ -5,7 +5,6 @@
 @section('content')
     <div class="max-w-7xl mx-auto">
         
-        <!-- Header Banner -->
         <div class="bento-card p-8 bg-slate-800 text-white relative overflow-hidden mb-6">
             <div class="absolute -right-10 -top-10 opacity-10">
                 <span class="material-symbols-outlined" style="font-size: 150px;">calendar_month</span>
@@ -16,7 +15,6 @@
             </div>
         </div>
 
-        <!-- Form Filter Tanggal -->
         <div class="bento-card p-6 mb-8">
             <form action="{{ route('ketersediaan') }}" method="GET" class="flex flex-col md:flex-row gap-4 items-end">
                 <div class="w-full md:w-1/2">
@@ -39,7 +37,6 @@
             </form>
         </div>
 
-        <!-- Daftar Lapangan & Jadwal -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             @forelse($lapangans as $lapangan)
                 <div class="bento-card overflow-hidden flex flex-col">
@@ -54,19 +51,15 @@
                     <div class="p-6 flex-grow">
                         <p class="text-sm text-text/60 mb-4">Ketersediaan pada: <strong class="text-text">{{ \Carbon\Carbon::parse(request('tanggal', now()))->format('d F Y') }}</strong></p>
                         
-                        <!-- Grid Jam Operasional (Misal: 08:00 - 22:00) -->
                         <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
                             @php
-                                // Atur jam operasional sport center Anda di sini (contoh: buka jam 8 pagi, tutup jam 22 malam)
                                 $jamBuka = 8;
                                 $jamTutup = 22;
                                 
-                                // Ambil jadwal yang SUDAH TERPESAN (Lunas / Pending) di lapangan ini pada tanggal yang dipilih
                                 $jadwalTerpesan = $lapangan->reservasis->where('tanggal', request('tanggal', now()->format('Y-m-d')))
                                                     ->whereIn('status', ['Lunas', 'Pending'])
                                                     ->pluck('jam_mulai')
                                                     ->map(function($jam) {
-                                                        // Ubah '08:00:00' menjadi angka 8 agar mudah dicocokkan
                                                         return (int) \Carbon\Carbon::parse($jam)->format('H');
                                                     })->toArray();
                             @endphp
@@ -78,13 +71,11 @@
                                 @endphp
 
                                 @if($isBooked)
-                                    <!-- Jam yang sudah dibooking (Disable) -->
                                     <div class="bg-gray-100 text-gray-400 rounded-lg p-2 text-center text-xs font-bold border border-gray-200 cursor-not-allowed title='Sudah dipesan'">
                                         <span class="block line-through">{{ $jamFormat }}</span>
                                         <span class="text-[9px] font-normal text-red-500">Booked</span>
                                     </div>
                                 @else
-                                    <!-- Jam kosong (Tersedia) -->
                                     <div class="bg-green-50 text-secondary border border-green-200 rounded-lg p-2 text-center text-xs font-bold hover:bg-secondary hover:text-white transition-colors cursor-pointer title='Tersedia'">
                                         <span class="block">{{ $jamFormat }}</span>
                                         <span class="text-[9px] font-normal opacity-80">Kosong</span>

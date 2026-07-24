@@ -150,7 +150,6 @@
                     </div>`;
             }
 
-            // Fetch ke API
             fetch(`/api/jadwal?tanggal=${tanggal}&lapangan_id=${lapangan_id}`)
                 .then(response => response.json())
                 .then(bookedSlots => {

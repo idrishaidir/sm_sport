@@ -28,6 +28,7 @@ class AdminController extends Controller
         }
 
         $reservasis = Reservasi::with('lapangan', 'user')->orderBy('created_at', 'desc')->paginate(10);
+        
         $butuhValidasi = Reservasi::where('status', 'Pending')->whereNotNull('bukti_bayar')->count();
         return view('admin.dashboard', compact('totalPendapatan', 'totalReservasi', 'menungguPembayaran', 'reservasis', 'butuhValidasi'));
     }
@@ -91,11 +92,35 @@ class AdminController extends Controller
             return back()->with('error', 'Gagal: Lapangan tidak ditemukan. ');
         }
 
+        $new_start = strtotime($request->jam_mulai);
+        $new_end = strtotime("+". $request->durasi_jam . " hours", $new_start);
+
+        $bentrok = \App\Models\Reservasi::where('lapangan_id', $request->lapangan_id)
+            ->where('tanggal', $request->tanggal)
+            ->where(function($query){
+                $query -> where('status', 'Lunas')
+                        -> orWhere(function($subQuery){
+                            $subQuery ->where('status', 'Pending')
+                                    -> where('batas_waktu_bayar', '>', now());
+                        });
+            })
+            ->get()
+            ->contains(function ($jadwal) use ($new_start, $new_end) {
+                $exist_start = strtotime($jadwal->jam_mulai);
+                $exist_end = strtotime("+" . $jadwal->durasi_jam . " hours", $exist_start);
+                return $new_start < $exist_end && $new_end > $exist_start;
+            });
+
+        if ($bentrok) {
+            return back()->with('error', 'Gagal: Jadwal tersebut sudah dipesan (berbenturan).');
+        }
+
         $totalBayar = (int)$lapangan->harga_per_jam * (int)$request->durasi_jam;
 
         $akunTamu =\App\Models\User::where('email', 'tamusmsport@gmail.com')->first();
 
         $idPengguna = $akunTamu ? $akunTamu->id:\Illuminate\Support\Facades\Auth::id();
+        
         \App\Models\Reservasi::create([
             'user_id' => $idPengguna,
             'lapangan_id' => $request->lapangan_id,
@@ -107,6 +132,6 @@ class AdminController extends Controller
             'keterangan' => 'Pesan Ditempat. dipesan oleh: ' . $request->nama_pelanggan
         ]);
 
-        return back()->with('succes', 'Reservasi Berhasil Dibuat!');
+        return back()->with('success', 'Reservasi Berhasil Dibuat!');
     }
 }

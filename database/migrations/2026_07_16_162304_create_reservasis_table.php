@@ -19,7 +19,8 @@ return new class extends Migration
             $table->time('jam_mulai');
             $table->integer('durasi_jam');
             $table->decimal('total_bayar', 10, 2);
-            $table->enum('status', ['Pending', 'Lunas', 'Gagal', 'Batal'])->default('Pending');            $table->string('keterangan')->nullable();
+            $table->enum('status', ['Pending', 'Lunas', 'Gagal', 'Batal'])->default('Pending');
+            $table->string('keterangan')->nullable();
             $table->string('bukti_bayar')->nullable();
             $table->timestamp('batas_waktu_bayar')->nullable();
             $table->timestamps();

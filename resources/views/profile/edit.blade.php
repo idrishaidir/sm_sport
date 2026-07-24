@@ -82,25 +82,46 @@
                     @csrf
                     @method('put')
 
-                    <div>
+                    {{-- Current Password --}}
+                    <div x-data="{ show: false }">
                         <label class="block text-xs text-white/70 mb-1">Kata Sandi Saat Ini</label>
-                        <input type="password" name="current_password" class="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-sm focus:ring-1 focus:ring-secondary focus:border-secondary transition-all" required>
+                        <div class="relative">
+                            <input x-bind:type="show ? 'text' : 'password'" name="current_password" class="w-full p-2.5 pr-10 bg-white/5 border border-white/10 rounded-xl text-sm focus:ring-1 focus:ring-secondary focus:border-secondary transition-all" required>
+                            <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 flex items-center pr-3 text-white/50 hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-[18px]" x-show="!show">visibility</span>
+                                <span class="material-symbols-outlined text-[18px]" x-show="show" style="display: none;">visibility_off</span>
+                            </button>
+                        </div>
                         @error('current_password', 'updatePassword') 
                             <span class="text-red-400 text-xs mt-1 block">{{ $message }}</span> 
                         @enderror
                     </div>
 
-                    <div>
+                    {{-- New Password --}}
+                    <div x-data="{ show: false }">
                         <label class="block text-xs text-white/70 mb-1">Kata Sandi Baru</label>
-                        <input type="password" name="password" class="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-sm focus:ring-1 focus:ring-secondary focus:border-secondary transition-all" required>
+                        <div class="relative">
+                            <input x-bind:type="show ? 'text' : 'password'" name="password" class="w-full p-2.5 pr-10 bg-white/5 border border-white/10 rounded-xl text-sm focus:ring-1 focus:ring-secondary focus:border-secondary transition-all" required>
+                            <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 flex items-center pr-3 text-white/50 hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-[18px]" x-show="!show">visibility</span>
+                                <span class="material-symbols-outlined text-[18px]" x-show="show" style="display: none;">visibility_off</span>
+                            </button>
+                        </div>
                         @error('password', 'updatePassword') 
                             <span class="text-red-400 text-xs mt-1 block">{{ $message }}</span> 
                         @enderror
                     </div>
 
-                    <div>
+                    {{-- Confirm Password --}}
+                    <div x-data="{ show: false }">
                         <label class="block text-xs text-white/70 mb-1">Konfirmasi Kata Sandi Baru</label>
-                        <input type="password" name="password_confirmation" class="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-sm focus:ring-1 focus:ring-secondary focus:border-secondary transition-all" required>
+                        <div class="relative">
+                            <input x-bind:type="show ? 'text' : 'password'" name="password_confirmation" class="w-full p-2.5 pr-10 bg-white/5 border border-white/10 rounded-xl text-sm focus:ring-1 focus:ring-secondary focus:border-secondary transition-all" required>
+                            <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 flex items-center pr-3 text-white/50 hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-[18px]" x-show="!show">visibility</span>
+                                <span class="material-symbols-outlined text-[18px]" x-show="show" style="display: none;">visibility_off</span>
+                            </button>
+                        </div>
                         @error('password_confirmation', 'updatePassword') 
                             <span class="text-red-400 text-xs mt-1 block">{{ $message }}</span> 
                         @enderror
@@ -127,9 +148,15 @@
                     @csrf
                     @method('delete')
 
-                    <div>
+                    <div x-data="{ show: false }">
                         <label class="block text-xs text-white/70 mb-1">Kata Sandi Akun</label>
-                        <input type="password" name="password" placeholder="Masukkan sandi untuk konfirmasi hapus" class="w-full p-2.5 bg-white/5 border border-red-500/30 rounded-xl text-sm focus:ring-1 focus:ring-red-500 focus:border-red-500 transition-all" required>
+                        <div class="relative">
+                            <input x-bind:type="show ? 'text' : 'password'" name="password" placeholder="Masukkan sandi untuk konfirmasi hapus" class="w-full p-2.5 pr-10 bg-white/5 border border-red-500/30 rounded-xl text-sm focus:ring-1 focus:ring-red-500 focus:border-red-500 transition-all" required>
+                            <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 flex items-center pr-3 text-white/50 hover:text-red-400 transition-colors">
+                                <span class="material-symbols-outlined text-[18px]" x-show="!show">visibility</span>
+                                <span class="material-symbols-outlined text-[18px]" x-show="show" style="display: none;">visibility_off</span>
+                            </button>
+                        </div>
                         @error('password', 'userDeletion') 
                             <span class="text-red-400 text-xs mt-1 block">{{ $message }}</span> 
                         @enderror

@@ -76,23 +76,34 @@
                     </div>
                 </div>
 
-                <div>
+                <div x-data="{ show: false }">
                     <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Kata Sandi</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <span class="material-symbols-outlined text-gray-400 text-lg">lock</span>
                         </div>
-                        <input type="password" id="password" name="password" required placeholder="Minimal 8 karakter" class="w-full pl-12 border-gray-200 bg-gray-50 rounded-xl focus:border-secondary focus:ring-secondary py-3 text-sm transition-colors">
+                        <input x-bind:type="show ? 'text' : 'password'" id="password" name="password" required placeholder="Minimal 8 karakter" class="w-full pl-12 pr-12 border-gray-200 bg-gray-50 rounded-xl focus:border-secondary focus:ring-secondary py-3 text-sm transition-colors">
+                        
+                        <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors">
+                            <span class="material-symbols-outlined text-lg" x-show="!show">visibility</span>
+                            <span class="material-symbols-outlined text-lg" x-show="show" style="display: none;">visibility_off</span>
+                        </button>
                     </div>
                 </div>
 
-                <div>
+                {{-- Input Konfirmasi Kata Sandi dengan Toggle --}}
+                <div x-data="{ show: false }">
                     <label for="password_confirmation" class="block text-sm font-semibold text-gray-700 mb-2">Konfirmasi Kata Sandi</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <span class="material-symbols-outlined text-gray-400 text-lg">lock_reset</span>
                         </div>
-                        <input type="password" id="password_confirmation" name="password_confirmation" required placeholder="Ketik ulang kata sandi" class="w-full pl-12 border-gray-200 bg-gray-50 rounded-xl focus:border-secondary focus:ring-secondary py-3 text-sm transition-colors">
+                        <input x-bind:type="show ? 'text' : 'password'" id="password_confirmation" name="password_confirmation" required placeholder="Ketik ulang kata sandi" class="w-full pl-12 pr-12 border-gray-200 bg-gray-50 rounded-xl focus:border-secondary focus:ring-secondary py-3 text-sm transition-colors">
+                        
+                        <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors">
+                            <span class="material-symbols-outlined text-lg" x-show="!show">visibility</span>
+                            <span class="material-symbols-outlined text-lg" x-show="show" style="display: none;">visibility_off</span>
+                        </button>
                     </div>
                 </div>
 

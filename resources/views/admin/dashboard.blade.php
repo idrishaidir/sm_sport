@@ -23,6 +23,11 @@
             {{ session('success')}}
         </div>
         @endif
+        @if (session('error'))
+            <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
+                <span class="font-medium">Gagal!</span> {{ session('error') }}
+            </div>
+        @endif
 
         <form action="{{route('admin.reservasi.cepat')}}" method="POST" class="p-10 mb-6 shadow-sm bg-white rounded-xl">
             @csrf
