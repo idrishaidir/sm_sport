@@ -1,35 +1,31 @@
-Berikut ialah kandungan yang telah diterjemahkan dan disesuaikan supaya anda boleh terus menyalin (copy) dan menampal (paste) terus ke dalam fail `README.md` projek anda.
-
-Teks di bawah ditulis dalam bahasa Melayu mengikut spesifikasi sistem anda:
-
 ````markdown
-# SM Sport Center - Sistem Tempahan Gelanggang Sukan
+# SM Sport Center - Sistem Reservasi Lapangan Olahraga
 
-SM Sport Center ialah aplikasi berasaskan web yang dibina menggunakan **Laravel** untuk memudahkan proses tempahan gelanggang sukan (seperti Futsal dan Badminton). Aplikasi ini dilengkapi dengan ciri ketersediaan jadual masa nyata (_real-time_), papan pemuka (_dashboard_) pentadbir, serta sistem pengesahan dan verifikasi e-mel untuk pengguna.
+SM Sport Center adalah aplikasi berbasis web yang dibangun menggunakan **Laravel** untuk memudahkan proses pemesanan atau reservasi lapangan olahraga (seperti Futsal dan Badminton). Aplikasi ini dilengkapi dengan fitur ketersediaan jadwal secara _real-time_, dashboard admin, serta sistem autentikasi dan verifikasi email bagi pengguna.
 
-## 🚀 Ciri-ciri Utama
+## 🚀 Fitur Utama
 
-- **Pengesahan Pengguna:** Pendaftaran, Log Masuk dan Tetapkan Semula Kata Laluan yang selamat.
-- **Verifikasi E-mel:** Memastikan pengguna mendaftar dengan e-mel yang sah.
-- **Tempahan Gelanggang:** Pengguna boleh membuat tempahan gelanggang pada tarikh dan masa tertentu.
-- **Semakan Ketersediaan:** Menunjukkan ketersediaan gelanggang secara masa nyata.
-- **Papan Pemuka Pentadbir (Admin):** Fungsi khas untuk admin menguruskan tempahan, melihat laporan, dan mencetak laporan tempahan.
-- **Pemberitahuan E-mel:** Penghantaran status tempahan ke e-mail pengguna.
-- **Automasi Sistem:** Semakan automatik (cron/command) untuk tempahan yang telah tamat tempoh.
+- **Autentikasi Pengguna:** Registrasi, Login, dan Reset Password yang aman.
+- **Verifikasi Email:** Memastikan pengguna mendaftar dengan email yang valid.
+- **Pemesanan Lapangan:** Pengguna dapat melakukan reservasi lapangan pada jam dan tanggal tertentu.
+- **Cek Ketersediaan:** Menampilkan ketersediaan lapangan secara langsung (_real-time_).
+- **Dashboard Admin:** Fitur khusus admin untuk mengelola pemesanan, melihat laporan, dan mencetak laporan reservasi.
+- **Notifikasi Email:** Pengiriman status reservasi ke email pengguna.
+- **Otomatisasi Sistem:** Pengecekan otomatis (cron/command) untuk reservasi yang sudah kedaluwarsa.
 
-## 🛠️ Keperluan Sistem (Prerequisites)
+## 🛠️ Persyaratan Sistem (Prerequisites)
 
-Sebelum menjalankan aplikasi ini, pastikan sistem anda mempunyai perkara berikut:
+Sebelum menjalankan aplikasi ini, pastikan sistem Anda memiliki hal-hal berikut:
 
-- **PHP** (Versi 8.1 atau lebih baharu)
-- **Composer** (Pengurus pakej PHP)
+- **PHP** (Versi 8.1 atau lebih baru)
+- **Composer** (Manajer paket PHP)
 - **Node.js & NPM** (Untuk kompilasi aset _frontend_ dengan Vite)
-- **MySQL / MariaDB** (Untuk pangkalan data)
-- **Git** (Pilihan, untuk _cloning_ repositori)
+- **MySQL / MariaDB** (Untuk database)
+- **Git** (Opsional, untuk _cloning_ repositori)
 
-## ⚙️ Cara Pemasangan (Installation)
+## ⚙️ Cara Instalasi (Installation)
 
-Ikuti langkah-langkah di bawah untuk menjalankan projek ini di _local environment_ anda:
+Ikuti langkah-langkah berikut untuk menjalankan proyek di _local environment_ Anda:
 
 1. **Clone Repositori**
     ```bash
@@ -38,14 +34,14 @@ Ikuti langkah-langkah di bawah untuk menjalankan projek ini di _local environmen
     ```
 ````
 
-2. **Pasang Dependensi PHP (Composer)**
+2. **Install Dependensi PHP (Composer)**
 
 ```bash
 composer install
 
 ```
 
-3. **Pasang Dependensi Node.js (NPM)**
+3. **Install Dependensi Node.js (NPM)**
 
 ```bash
 npm install
@@ -53,35 +49,35 @@ npm install
 ```
 
 4. **Konfigurasi Environment**
-   Salin fail konfigurasi _environment_ bawaan:
+   Salin file konfigurasi _environment_ bawaan:
 
 ```bash
 cp .env.example .env
 
 ```
 
-5. **Jana Kunci Aplikasi (Application Key)**
+5. **Generate Application Key**
 
 ```bash
 php artisan key:generate
 
 ```
 
-6. **Konfigurasi Pangkalan Data (Database)**
-   Buka fail `.env` dan sesuaikan butiran pangkalan data anda:
+6. **Konfigurasi Database**
+   Buka file `.env` dan sesuaikan kredensial database Anda:
 
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=nama_pangkalan_data_anda
+DB_DATABASE=nama_database_anda
 DB_USERNAME=root
 DB_PASSWORD=
 
 ```
 
-7. **Migrasi dan Seeding Pangkalan Data**
-   Jalankan migrasi untuk mencipta jadual berserta data _dummy_ awal (seperti akaun Admin dan data Gelanggang):
+7. **Migrasi dan Seeding Database**
+   Jalankan migrasi untuk membuat tabel beserta data _dummy_ awal (seperti akun Admin dan data Lapangan):
 
 ```bash
 php artisan migrate --seed
@@ -92,7 +88,6 @@ php artisan migrate --seed
 
 ```bash
 npm run dev
-
 ```
 
 9. **Jalankan Aplikasi**
@@ -102,51 +97,50 @@ php artisan serve
 
 ```
 
-9. **Jalankan Task Scheduler**
+10. **Task Scheduleri**
 
 ```bash
 php artisan schedule:work
-
 ```
 
-Aplikasi anda kini boleh diakses melalui `http://localhost:8000`.
+Aplikasi Anda sekarang dapat diakses melalui `http://localhost:8000`.
 
 ---
 
-## 📧 Tetapan E-mel Verifikasi (SMTP Gmail)
+## 📧 Pengaturan Email Verifikasi (SMTP Gmail)
 
-Agar fungsi verifikasi e-mel dan pemberitahuan tempahan berjalan dengan lancar, anda perlu menetapkan SMTP menggunakan akaun Gmail anda. Ikuti 3 langkah mudah ini:
+Agar fitur verifikasi email dan notifikasi reservasi berjalan dengan baik, Anda perlu mengatur SMTP menggunakan akun Gmail Anda. Ikuti 3 langkah mudah ini:
 
-### 1. Buat "App Password" di Akaun Google Anda
+### 1. Buat "App Password" di Akun Google Anda
 
-Atas dasar keselamatan Google, anda tidak boleh menggunakan kata laluan asal Gmail anda. Anda perlu mencipta kata laluan khusus aplikasi:
+Karena kebijakan keamanan Google, Anda tidak boleh menggunakan password asli Gmail Anda. Anda harus membuat sandi khusus aplikasi:
 
-- Log masuk ke Akaun Google anda (pastikan **Pengesahan 2 Langkah / 2-Step Verification** sudah diaktifkan).
-- Cari menu **Kata Laluan Aplikasi (App Passwords)** di tetapan keselamatan akaun Google anda.
-- Buat nama aplikasi baharu (contoh: _SM Sport Center_), kemudian klik **Buat**.
-- Google akan memberikan 16 digit kata laluan (tanpa jarak). **Salin kata laluan tersebut**.
+- Masuk ke Akun Google Anda (pastikan **Verifikasi 2 Langkah / 2-Step Verification** sudah aktif).
+- Cari menu **Sandi Aplikasi (App Passwords)** di pengaturan keamanan akun Google Anda.
+- Buat nama aplikasi baru (misal: _SM Sport Center_), lalu klik **Buat**.
+- Google akan memberikan 16 digit sandi (tanpa spasi). **Salin sandi tersebut**.
 
-### 2. Kemas Kini Fail `.env`
+### 2. Atur File `.env`
 
-Buka fail `.env` di projek anda, kemudian ubah tetapan `MAIL` menjadi seperti ini:
+Buka file `.env` di proyek Anda, lalu ubah pengaturan `MAIL` menjadi seperti ini:
 
 ```env
 MAIL_MAILER=smtp
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=465
-MAIL_USERNAME=emel_gmail_anda@gmail.com
+MAIL_USERNAME=email_gmail_anda@gmail.com
 MAIL_PASSWORD=masukkan_16_digit_app_password_disini
 MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=emel_gmail_anda@gmail.com
+MAIL_FROM_ADDRESS=email_gmail_anda@gmail.com
 MAIL_FROM_NAME="${APP_NAME}"
 
 ```
 
-_(Gantikan `emel_gmail_anda@gmail.com` dan `MAIL_PASSWORD` dengan butiran anda sendiri)._
+_(Ganti `email_gmail_anda@gmail.com` dan `MAIL_PASSWORD` dengan data milik Anda)._
 
 ### 3. Bersihkan Cache Konfigurasi
 
-Oleh sebab Laravel menyimpan memori _cache_ dari fail `.env`, bersihkan _cache_ tersebut melalui terminal:
+Karena Laravel menyimpan memori _cache_ dari file `.env`, bersihkan _cache_ tersebut lewat terminal:
 
 ```bash
 php artisan config:clear
@@ -156,14 +150,14 @@ php artisan cache:clear
 
 ## 🏗️ Struktur Teknologi (Tech Stack)
 
-- **Rangka Kerja (Framework):** Laravel (PHP)
+- **Framework:** Laravel (PHP)
 - **Frontend:** Blade Templating, Tailwind CSS, Alpine.js (bawaan Laravel Breeze)
-- **Pangkalan Data:** MySQL
-- **Peralatan (Tooling):** Vite, Composer, Artisan
+- **Database:** MySQL
+- **Tooling:** Vite, Composer, Artisan
 
-## 📄 Lesen
+## 📄 Lisensi
 
-Projek ini dibina untuk kegunaan sistem SM Sport Center. Sila sesuaikan dasar lesen mengikut keperluan institusi atau hak cipta anda.
+Proyek ini dibuat untuk keperluan sistem SM Sport Center. Silakan sesuaikan kebijakan lisensi sesuai kebutuhan institusi atau hak cipta Anda.
 
 ```
 
